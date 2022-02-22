@@ -14,7 +14,9 @@
 			},
 		},
 		data() {
-			return {};
+			return {
+				title: "Vue Ninjas",
+			};
 		},
 		methods: {
 			changeTitle() {
