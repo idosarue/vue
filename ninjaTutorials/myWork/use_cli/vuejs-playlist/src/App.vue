@@ -1,16 +1,9 @@
 <template>
 	<div>
-		<app-header></app-header>
-		<p></p>
-		<h1>{{ title }}</h1>
-		<p>{{ greeting() }}</p>
-		<ninjas></ninjas>
-		<new-ninjas></new-ninjas>
-		<!-- Props -->
-		<h3>props</h3>
-		<ninja-props v-bind:ninjaProps="ninjaProps"></ninja-props>
-		<!--  -->
-		<app-footer></app-footer>
+		<!-- $event is the event data -->
+		<app-header v-bind:title="title" v-on:changeTitle="updateTitle($event)"></app-header>
+		<ninjas v-bind:ninjas="ninjas"></ninjas>
+		<app-footer v-bind:title="title"></app-footer>
 	</div>
 </template>
 
@@ -18,8 +11,6 @@
 	import Ninjas from "./components/Ninjas.vue";
 	import Header from "./components/Header.vue";
 	import Footer from "./components/Footer.vue";
-	import NewNinjas from "./components/NewNinjas.vue";
-	import NinjaProps from "./components/NinjaProps.vue";
 
 	export default {
 		// Local nesting
@@ -27,25 +18,24 @@
 			Ninjas,
 			"app-header": Header,
 			"app-footer": Footer,
-			"new-ninjas": NewNinjas,
-			"ninja-props": NinjaProps,
 		},
 		data() {
 			return {
 				title: "Ninjas",
-				ninjaProps: [
-					{ name: "Ryu Props!", speciality: "Vue Components", show: false },
-					{ name: "Crystal Props!", speciality: "HTML Wizardry", show: false },
-					{ name: "Hitoshi Props!", speciality: "Click Events", show: false },
-					{ name: "Tango Props!", speciality: "Conditionals", show: false },
-					{ name: "Kami Props!", speciality: "Webpack", show: false },
-					{ name: "Yoshi Props!", speciality: "Data Diggin", show: false },
+				ninjas: [
+					{ name: "Ryu", speciality: "Vue Components", show: false },
+					{ name: "Crystal", speciality: "HTML Wizardry", show: false },
+					{ name: "Hitoshi", speciality: "Click Events", show: false },
+					{ name: "Tango", speciality: "Conditionals", show: false },
+					{ name: "Kami", speciality: "Webpack", show: false },
+					{ name: "Yoshi", speciality: "Data Diggin", show: false },
 				],
+				title: "Vue Ninjas",
 			};
 		},
 		methods: {
-			greeting: function() {
-				return "heyy cowboy!";
+			updateTitle(updatedTitle) {
+				this.title = updatedTitle;
 			},
 		},
 	};
