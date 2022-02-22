@@ -5,8 +5,6 @@
 </template>
 
 <script>
-	import { bus } from "../main";
-
 	export default {
 		props: {
 			title: {
@@ -14,14 +12,13 @@
 			},
 		},
 		data() {
-			return {};
+			return {
+				title: "Vue Ninjas",
+			};
 		},
 		methods: {
 			changeTitle() {
-				// Create an event
-				// this.$emit("changeTitle", this.title === "Vue Ninjas" ? "Vue Wizards" : "Vue Ninjas");
-				resizeBy.title = "Vue Wizards";
-				bus.$emit("titleChanged", "Vue Wizards");
+				console.log(this.title);
 			},
 		},
 	};
