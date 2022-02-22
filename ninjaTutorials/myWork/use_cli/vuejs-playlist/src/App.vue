@@ -1,10 +1,5 @@
 <template>
-	<div>
-		<!-- $event is the event data -->
-		<app-header v-bind:title="title" v-on:changeTitle="updateTitle($event)"></app-header>
-		<ninjas v-bind:ninjas="ninjas"></ninjas>
-		<app-footer v-bind:title="title"></app-footer>
-	</div>
+	<div></div>
 </template>
 
 <script>
