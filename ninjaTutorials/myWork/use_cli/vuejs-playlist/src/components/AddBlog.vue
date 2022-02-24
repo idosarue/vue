@@ -16,6 +16,10 @@
 				<label>Cheese</label>
 				<input type="checkbox" name="" id="" value="cheese" v-model="blog.categories" />
 			</div>
+			<label>Author:</label>
+			<select v-model="blog.author">
+				<option v-for="author in authors">{{ author }}</option>
+			</select>
 		</form>
 		<div id="preview">
 			<h3>Preview Blog</h3>
@@ -23,11 +27,12 @@
 			<p>Blog Content:</p>
 			<p>{{ blog.content }}</p>
 			<p>Blog Categories:</p>
-            <p>
-                <ul>
-                    <li v-for="category in blog.categories">{{ category }}</li>
-                </ul>
-            </p>
+			<div>
+				<ul>
+					<li v-for="category in blog.categories">{{ category }}</li>
+				</ul>
+			</div>
+			<p>Author: {{ blog.author }}</p>
 		</div>
 	</div>
 </template>
@@ -40,7 +45,9 @@
 					title: "",
 					content: "",
 					categories: [],
+					author: "",
 				},
+				authors: ["The Net Ninja", "The Angular Avenger", "The Vue Vindicator"],
 			};
 		},
 		methods: {},
