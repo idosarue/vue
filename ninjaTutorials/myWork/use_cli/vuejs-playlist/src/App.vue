@@ -1,43 +1,47 @@
 <template>
-	<div></div>
+	<div>
+		<!-- *** FIrst Example ***** -->
+		<!-- <form-helper>
+			<h2 slot="title">{{ title }}</h2>
+			<p slot="text">I am the p for the slot</p>
+		</form-helper> -->
+
+		<!-- ****** -->
+
+		<!-- ***** Second example ***** -->
+		<form-helper>
+			<div slot="form-header">
+				<h3>This is the title of the form</h3>
+				<p>Information avout the form</p>
+			</div>
+			<div slot="form-fields">
+				<input type="text" placeholder="name" required />
+				<input type="password" placeholder="password" required />
+			</div>
+
+			<div slot="form-controls">
+				<button v-on:click="handeSubmit">Submit</button>
+			</div>
+		</form-helper>
+		<!-- ****** -->
+	</div>
 </template>
 
 <script>
-	import Ninjas from "./components/Ninjas.vue";
-	import Header from "./components/Header.vue";
-	import Footer from "./components/Footer.vue";
+	import FormHelper from "./components/FormHelper.vue";
 
 	export default {
 		// Local nesting
 		components: {
-			Ninjas,
-			"app-header": Header,
-			"app-footer": Footer,
+			"form-helper": FormHelper,
 		},
 		data() {
 			return {
-				title: "Ninjas",
-				ninjas: [
-					{ name: "Ryu", speciality: "Vue Components", show: false },
-					{ name: "Crystal", speciality: "HTML Wizardry", show: false },
-					{ name: "Hitoshi", speciality: "Click Events", show: false },
-					{ name: "Tango", speciality: "Conditionals", show: false },
-					{ name: "Kami", speciality: "Webpack", show: false },
-					{ name: "Yoshi", speciality: "Data Diggin", show: false },
-				],
-				title: "Vue Ninjas",
+				title: "I am a dynamic slot title",
 			};
 		},
-		methods: {
-			updateTitle(updatedTitle) {
-				this.title = updatedTitle;
-			},
-		},
+		methods: {},
 	};
 </script>
 
-<style>
-	h1 {
-		color: red;
-	}
-</style>
+<style></style>
