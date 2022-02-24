@@ -1,46 +1,36 @@
 <template>
 	<div>
-		<!-- *** FIrst Example ***** -->
-		<!-- <form-helper>
-			<h2 slot="title">{{ title }}</h2>
-			<p slot="text">I am the p for the slot</p>
-		</form-helper> -->
-
-		<!-- ****** -->
-
-		<!-- ***** Second example ***** -->
-		<form-helper>
-			<div slot="form-header">
-				<h3>This is the title of the form</h3>
-				<p>Information avout the form</p>
-			</div>
-			<div slot="form-fields">
-				<input type="text" placeholder="name" required />
-				<input type="password" placeholder="password" required />
-			</div>
-
-			<div slot="form-controls">
-				<button v-on:click="handeSubmit">Submit</button>
-			</div>
-		</form-helper>
-		<!-- ****** -->
+		<keep-alive>
+			<component v-bind:is="component"></component>
+		</keep-alive>
+		<button v-on:click="component = 'form-one'">Show Form One</button>
+		<button v-on:click="component = 'form-two'">Show Form Two</button>
+		<!-- With function -->
+		<button v-on:click="switchForms" style="background-color: red;">Switch forms</button>
+		<!-- **** -->
 	</div>
 </template>
 
 <script>
-	import FormHelper from "./components/FormHelper.vue";
+	import FormOne from "./components/FormOne.vue";
+	import FormTwo from "./components/FormTwo.vue";
 
 	export default {
 		// Local nesting
 		components: {
-			"form-helper": FormHelper,
+			"form-one": FormOne,
+			"form-two": FormTwo,
 		},
 		data() {
 			return {
-				title: "I am a dynamic slot title",
+				component: "form-one",
 			};
 		},
-		methods: {},
+		methods: {
+			switchForms() {
+				this.component = this.component === "form-one" ? "form-two" : "form-one";
+			},
+		},
 	};
 </script>
 
