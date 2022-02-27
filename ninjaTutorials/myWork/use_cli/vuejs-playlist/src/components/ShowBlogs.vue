@@ -1,10 +1,10 @@
 <template>
 	<div>
 		<h1 v-show="loading">loading...</h1>
-		<div id="show-blogs" v-show="!loading">
+		<div id="show-blogs" v-show="!loading" v-theme:column="'narrow'">
 			<h1>All Blog Articles</h1>
 			<div v-for="blog in blogs" class="single-blog">
-				<h2>{{ blog.title }}</h2>
+				<h2 v-rainbow>{{ blog.title }}</h2>
 				<article>{{ blog.body }}</article>
 			</div>
 		</div>
@@ -21,15 +21,13 @@
 		},
 		methods: {},
 		created() {
-			this.$http
-				.get("https://jsonplaceholder.typicode.com/posts")
-				.then((data) => {
-					setTimeout(() => {
-						this.loading = false;
-						console.log(data);
-						this.blogs = data.body.slice(0, 10);
-					}, 2000);
-				});
+			this.$http.get("https://jsonplaceholder.typicode.com/posts").then((data) => {
+				setTimeout(() => {
+					this.loading = false;
+					console.log(data);
+					this.blogs = data.body.slice(0, 10);
+				}, 2000);
+			});
 		},
 	};
 </script>
