@@ -1,10 +1,11 @@
 <template>
 	<div>
 		<h1 v-show="loading">loading...</h1>
-		<div id="show-blogs" v-show="!loading" v-theme:column="'narrow'">
+		<div id="show-blogs" v-show="!loading">
 			<h1>All Blog Articles</h1>
-			<!-- Filters -->
-			<div v-for="blog in blogs" class="single-blog">
+			<input type="text" v-model="search" placeholder="search blogs" />
+			<!-- Searchbox filter -->
+			<div v-for="blog in filteredBlogs" class="single-blog">
 				<h2>{{ blog.title | toUpperCase }}</h2>
 				<article>{{ blog.body | snippet }}</article>
 			</div>
@@ -18,6 +19,7 @@
 			return {
 				blogs: [],
 				loading: true,
+				search: "",
 			};
 		},
 		methods: {},
@@ -29,6 +31,13 @@
 					this.blogs = data.body.slice(0, 10);
 				}, 2000);
 			});
+		},
+		computed: {
+			filteredBlogs: function() {
+				return this.blogs.filter((blog) => {
+					return blog.title.match(this.search.toLowerCase());
+				});
+			},
 		},
 	};
 </script>
