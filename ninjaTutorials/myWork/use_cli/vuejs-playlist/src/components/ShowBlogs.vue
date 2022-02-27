@@ -3,9 +3,10 @@
 		<h1 v-show="loading">loading...</h1>
 		<div id="show-blogs" v-show="!loading" v-theme:column="'narrow'">
 			<h1>All Blog Articles</h1>
+			<!-- Filters -->
 			<div v-for="blog in blogs" class="single-blog">
-				<h2 v-rainbow>{{ blog.title }}</h2>
-				<article>{{ blog.body }}</article>
+				<h2>{{ blog.title | toUpperCase }}</h2>
+				<article>{{ blog.body | snippet }}</article>
 			</div>
 		</div>
 	</div>
