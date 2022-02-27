@@ -6,7 +6,7 @@
 			<input type="text" v-model="search" placeholder="search blogs" />
 			<!-- Searchbox filter -->
 			<div v-for="blog in filteredBlogs" class="single-blog">
-				<h2>{{ blog.title | toUpperCase }}</h2>
+				<h2 v-rainbow>{{ blog.title | toUpperCase }}</h2>
 				<article>{{ blog.body | snippet }}</article>
 			</div>
 		</div>
