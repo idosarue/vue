@@ -1,13 +1,14 @@
 <template>
 	<div>
-		<form>
-			<input v-model="firstName" :class="this.errors.firstName ? 'error' : ''" type="text" placeholder="First Name" required />
+		<form @submit="checkForm">
+			<input v-model="firstName" :class="this.errors.firstName ? 'error' : ''" type="text" placeholder="First Name" />
+			<div>{{ errors }}</div>
 			<p v-if="errors.firstName">{{ errors.firstName }}</p>
-			<input v-model="lastName" :class="this.errors.lastName ? 'error' : ''" type="text" placeholder="Last Name" required />
+			<input v-model="lastName" :class="this.errors.lastName ? 'error' : ''" type="text" placeholder="Last Name" />
 			<p v-if="errors.lastName">{{ errors.lastName }}</p>
-			<input v-model="phoneNumber" :class="this.errors.phoneNumber ? 'error' : ''" type="text" placeholder="Phone Number" required />
+			<input v-model="phoneNumber" :class="this.errors.phoneNumber ? 'error' : ''" type="text" placeholder="Phone Number" />
 			<p v-if="errors.phoneNumber">{{ errors.phoneNumber }}</p>
-			<button v-on:click.prevent="postForm">Save Contact</button>
+			<button>Save Contact</button>
 		</form>
 	</div>
 </template>
@@ -27,18 +28,18 @@
 			};
 		},
 		methods: {
-			checkForm() {
+			checkForm(e) {
 				const requiredMessage = "This field is required";
 				this.errors = {};
 
 				const existingPhoneNumbers = this.contacts.map((contact) => contact.phoneNumber);
 				console.log(existingPhoneNumbers);
 
-				if (!this.firstName && !this.lastName && !this.phoneNumber) {
-					this.errors.firstName = requiredMessage;
-					this.errors.lastName = requiredMessage;
-					this.errors.phoneNumber = requiredMessage;
-				}
+				// if (!this.firstName && !this.lastName && !this.phoneNumber) {
+				// 	this.errors.firstName = requiredMessage;
+				// 	this.errors.lastName = requiredMessage;
+				// 	this.errors.phoneNumber = requiredMessage;
+				// }
 				if (!this.firstName) {
 					this.errors.firstName = requiredMessage;
 				}
@@ -47,18 +48,13 @@
 				}
 				if (!this.phoneNumber) {
 					this.errors.phoneNumber = requiredMessage;
-				} else if (!this.phoneNumber.match(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im)) {
+				} else if (!this.validatePhoneNumber(this.phoneNumber)) {
 					this.errors.phoneNumber = "invalid phone number";
 				} else if (existingPhoneNumbers.includes(this.phoneNumber)) {
 					this.errors.phoneNumber = "Phone number already exists";
 				}
 
-				if (!this.errors.firstName && !this.errors.lastName && !this.errors.phoneNumber) {
-					return true;
-				}
-			},
-			postForm() {
-				if (this.checkForm()) {
+				if (this.firstName && this.lastName && this.phoneNumber && this.validatePhoneNumber(this.phoneNumber) && !existingPhoneNumbers.includes(this.phoneNumber)) {
 					this.$http
 						.post("http://localhost:3000/contacts", {
 							firstName: this.firstName,
@@ -68,7 +64,32 @@
 						.then((data) => {
 							// console.log(data, "data");
 						});
+					return true;
 				}
+
+				e.preventDefault();
+			},
+			// postForm() {
+			// 	if (this.checkForm(e)) {
+			// 		e.target.submit();
+			// 		this.$http
+			// 			.post("http://localhost:3000/contacts", {
+			// 				firstName: this.firstName,
+			// 				lastName: this.lastName,
+			// 				phoneNumber: this.phoneNumber,
+			// 			})
+			// 			.then((data) => {
+			// 				// console.log(data, "data");
+			// 			});
+			// 	}
+			// },
+
+			validatePhoneNumber(phoneNumber) {
+				if (phoneNumber.match(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im)) {
+					return true;
+				}
+
+				return false;
 			},
 		},
 		created() {
