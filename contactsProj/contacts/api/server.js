@@ -59,8 +59,8 @@ app.get("/contacts", async (req, res) => {
 });
 
 app.post("/contacts", (req, res) => {
-	console.log("post");
-	console.log(req.body);
+	const newContact = new Contact(req.body);
+	newContact.save();
 	res.send(req.body);
 });
 
