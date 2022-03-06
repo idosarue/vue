@@ -11,7 +11,6 @@
 		data() {
 			return {
 				show: false,
-				contacts: "",
 				message: "",
 			};
 		},
