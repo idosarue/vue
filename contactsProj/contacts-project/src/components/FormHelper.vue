@@ -1,5 +1,5 @@
 <template>
-	<form @submit="checkForm">
+	<form @submit="checkForm" enctype="multipart/form-data">
 		<input v-model="formData.firstName" :class="this.errors.firstName ? 'error' : ''" type="text" placeholder="First Name" />
 		<div class="error-container">
 			<p v-if="errors.firstName">{{ errors.firstName }}</p>
@@ -12,12 +12,17 @@
 		<div class="error-container">
 			<p v-if="errors.phoneNumber">{{ errors.phoneNumber }}</p>
 		</div>
+		<input @change="onFileSelected" type="file" ref="file" />
+		<div class="error-container">
+			<p v-if="errors.file">{{ errors.file }}</p>
+		</div>
 		<button type="submit">Save Contact</button>
 	</form>
 </template>
 
 <script>
 	import { bus } from "../main";
+	const acceptedFileTypes = ["image/png", "image/jpg", "image/jpeg"];
 	export default {
 		data() {
 			return {
@@ -27,11 +32,13 @@
 					firstName: "",
 					lastName: "",
 					phoneNumber: "",
+					selectedFile: null,
 				},
 				errors: {
 					firstName: "",
 					lastName: "",
 					phoneNumber: "",
+					file: "",
 				},
 				existingPhoneNumbers: [],
 				contacts: [],
@@ -49,11 +56,8 @@
 			getPhoneNumbers() {
 				this.existingPhoneNumbers = this.contacts.map((contact) => contact.phoneNumber);
 				if (this.currentContactPhoneNumber) {
-					console.log(this.currentContactPhoneNumber);
 					this.existingPhoneNumbers = this.existingPhoneNumbers.filter((phoneNumber) => phoneNumber != this.currentContactPhoneNumber);
 				}
-
-				console.log(this.existingPhoneNumbers);
 			},
 			async checkForm(e) {
 				e.preventDefault();
@@ -83,10 +87,22 @@
 					this.errors.phoneNumber = "Phone number exists";
 				}
 
-				if (firstName && lastName && this.validatePhoneNumber(phoneNumber) && !this.existingPhoneNumbers.includes(phoneNumber)) {
+				if (!this.vaildateFileType()) {
+					this.errors.file = "Please choose images";
+				}
+
+				if (firstName && lastName && this.validatePhoneNumber(phoneNumber) && !this.existingPhoneNumbers.includes(phoneNumber) && this.vaildateFileType()) {
+					console.log(this.formData.selectedFile, "DATA");
+					const formData = new FormData();
+
+					formData.append("file", this.formData.selectedFile);
+					formData.append("firstName", this.formData.firstName);
+					formData.append("lastName", this.formData.lastName);
+					formData.append("phoneNumber", this.formData.phoneNumber);
+
 					if (this.currentContactPhoneNumber) {
 						this.$http
-							.put("http://localhost:3000/editContact/" + this.contactId, this.formData)
+							.put("http://localhost:3000/editContact/" + this.contactId, formData)
 							.then((data) => {
 								bus.$emit("addedContact", this.contacts);
 								bus.$emit("showPopUp", "Edited successfuly!");
@@ -96,7 +112,7 @@
 							});
 					} else {
 						this.$http
-							.post("http://localhost:3000/contacts", this.formData)
+							.post("http://localhost:3000/contacts", formData)
 							.then((data) => {
 								bus.$emit("addedContact", this.contacts);
 								bus.$emit("showPopUp", "Added Contact!");
@@ -109,10 +125,31 @@
 			},
 
 			validatePhoneNumber(phoneNumber) {
-				if (phoneNumber.match(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im)) {
+				// if (phoneNumber.match(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im)) {
+				// 	return true;
+				// }
+				// return false;
+				// if (phoneNumber.match(/^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/)) {
+				// 	return true;
+				// }
+				// return false;
+				if (phoneNumber.match(/^[\+]?[(]?[0-9]{3}[)]?[- ]?[0-9]{3}?[- ]?[0-9]{4,6}$/i)) {
 					return true;
 				}
 				return false;
+			},
+
+			onFileSelected() {
+				this.formData.selectedFile = this.$refs.file.files[0];
+			},
+
+			vaildateFileType() {
+				if (this.formData.selectedFile) {
+					if (!acceptedFileTypes.includes(this.formData.selectedFile.type)) {
+						return false;
+					}
+				}
+				return true;
 			},
 		},
 
@@ -124,12 +161,14 @@
 				this.errors = {};
 				this.contactId = "";
 				this.currentContactPhoneNumber = "";
+				this.$refs.file.value = "";
 			});
 
 			bus.$on("openModal", (data) => {
 				this.formData = data;
 				this.contactId = data._id;
 				this.currentContactPhoneNumber = data.phoneNumber;
+				console.log(this.$refs.file.files);
 			});
 		},
 	};

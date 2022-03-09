@@ -52,9 +52,9 @@
 		left: 50%;
 		transform: translate(-50%, -50%);
 		width: 50%;
-		height: 60%;
+		height: 70%;
 		background-color: white;
-		padding: 5em;
+		padding: 3em;
 		border-radius: 5px;
 		box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
 		z-index: 10;

@@ -88,4 +88,8 @@
 	button {
 		cursor: pointer;
 	}
+
+	img {
+		width: 100px;
+	}
 </style>

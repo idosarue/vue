@@ -9,7 +9,7 @@
 			<h1 v-show="loading">Loading...</h1>
 			<div v-show="!loading" v-for="contact in contacts">
 				<contact-card v-bind:contacts="contacts">
-					<img slot="contact-image" v-bind:src="contact.image ? contact.image : placeHolderImage" alt="not" />
+					<img slot="contact-image" v-bind:src="`http://localhost:3000/${contact.image ? contact.image : placeHolderImage}`" alt="not" />
 					<p slot="full-name">{{ fullName(contact) }}</p>
 					<p slot="phone-number">{{ contact.phoneNumber }}</p>
 					<button slot="deleteButton" v-on:click="deleteContact(contact)">Delete</button>
@@ -35,7 +35,7 @@
 		data() {
 			return {
 				contacts: [],
-				placeHolderImage: "static/images/default.png",
+				placeHolderImage: "default.png",
 				existingPhoneNumber: "",
 				contactId: "",
 				displayEditForm: false,
@@ -71,6 +71,7 @@
 			editContact(contact) {
 				this.$http.get("http://localhost:3000/contact/" + contact._id).then((response) => {
 					this.contactId = response.data._id;
+					console.log(response.data);
 					bus.$emit("openModal", response.data);
 				});
 			},
