@@ -2,19 +2,33 @@
 
 const express = require("express");
 const cors = require("cors");
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+	destination: function(req, file, cb) {
+		cb(null, "./uploads");
+	},
+	filename: function(req, file, cb) {
+		cb(null, file.originalname);
+	},
+});
+
+const upload = multer({ storage: storage });
 const mongoose = require("mongoose");
 
 mongoose.connect("mongodb://localhost:27017/contactsDB");
 
 const app = express();
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+// app.use(express.urlencoded({ extended: false }));
+// app.use(express.json());
 app.use(cors());
 
+app.use(express.static(__dirname + "/uploads"));
+app.use("/uploads", express.static("uploads"));
 const contacts = [
-	{ firstName: "Jane", lastName: "doe", phoneNumber: "0511781695", image: "static/images/contact2.png" },
-	{ firstName: "Mario", lastName: "doe", phoneNumber: "0524781695", image: "static/images/contact3.png" },
-	{ firstName: "July", lastName: "doe", phoneNumber: "0533781695", image: "static/images/contact2.png" },
+	{ firstName: "Jane", lastName: "doe", phoneNumber: "0511781695", image: "contact2.png" },
+	{ firstName: "Mario", lastName: "doe", phoneNumber: "0524781695", image: "contact3.png" },
+	{ firstName: "July", lastName: "doe", phoneNumber: "0533781695", image: "contact2.png" },
 	{ firstName: "Rachet", lastName: "doe", phoneNumber: "0544781695", image: "" },
 ];
 
@@ -40,7 +54,7 @@ const john = new Contact({
 	firstName: "John",
 	lastName: "doe",
 	phoneNumber: "0555781695",
-	image: "static/images/contact1.png",
+	image: "contact1.png",
 });
 
 function addData() {
@@ -70,8 +84,9 @@ app.get("/contacts/:phoneNumber", async (req, res) => {
 	}
 });
 
-app.post("/contacts", (req, res) => {
+app.post("/contacts", upload.single("file"), (req, res) => {
 	const newContact = new Contact(req.body);
+	if (req.file) newContact.image = `${req.file.originalname}`;
 	newContact.save();
 	res.send(req.body);
 });
