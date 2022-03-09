@@ -8,10 +8,7 @@
 	export default {
 		components: {},
 		data() {
-			return {
-				loading: true,
-				contacts: "",
-			};
+			return {};
 		},
 
 		methods: {},
@@ -26,9 +23,5 @@
 		position: absolute;
 		top: 0;
 		display: flex;
-	}
-
-	a {
-		text-decoration: none;
 	}
 </style>

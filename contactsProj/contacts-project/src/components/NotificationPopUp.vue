@@ -15,12 +15,7 @@
 			};
 		},
 
-		methods: {
-			addContacts(newContacts) {
-				this.contacts = newContacts;
-				alert("changed");
-			},
-		},
+		methods: {},
 
 		created() {
 			bus.$on("showPopUp", (message) => {

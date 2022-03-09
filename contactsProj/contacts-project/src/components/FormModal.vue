@@ -34,11 +34,11 @@
 		},
 
 		created() {
-			bus.$on("addedContact", (data) => {
+			bus.$on("addedContact", () => {
 				this.showModal = false;
 			});
 
-			bus.$on("openModal", (data) => {
+			bus.$on("openModal", () => {
 				this.showModal = true;
 			});
 		},
