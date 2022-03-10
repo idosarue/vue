@@ -1,26 +1,21 @@
 <template>
   <div class="container">
-    <FormModal>
-      <div slot="form">
-        <AddContactForm></AddContactForm>
-      </div>
-    </FormModal>
+    <FormModal />
     <div class="contacts">
-    <h1 v-if="loading">Loading...</h1>
-	<template v-if="!loading">
-		<ContactCard 
-			v-bind:contact="contact"
-			v-for="(contact, contact_index) in contacts"
-			:key="contact_index"
-		/>
-	</template>
+      <h1 v-if="loading">Loading...</h1>
+      <template v-if="!loading">
+        <ContactCard 
+          v-bind:contact="contact"
+          v-for="(contact, contact_index) in contacts"
+          :key="contact_index"
+        />
+      </template>
     </div>
   </div>
 </template>
 
 <script>
 import ContactCard from "./ContactCard.vue";
-import AddContactForm from "./FormHelper.vue";
 import FormModal from "./FormModal.vue";
 import { bus } from "../main";
 import {API_URL} from '../config/constants';
@@ -28,20 +23,13 @@ import {API_URL} from '../config/constants';
 export default {
   components: {
     ContactCard,
-    AddContactForm,
     FormModal
   },
   data() {
     return {
       contacts: [],
       existingPhoneNumber: "",
-      contactId: "",
       displayEditForm: false,
-      formData: {
-        firstName: "",
-        lastName: "",
-        phoneNumber: ""
-      },
       existingPhoneNumbers: [],
       loading: true
     };
@@ -63,9 +51,8 @@ export default {
     setTimeout(() => {
       this.getData();
     }, 2000);
-    bus.$on("addedContact", data => {
+    bus.$on("addedContact", () => {
       this.getData();
-      this.formData = {};
     });
     bus.$on('contactDeleted', () => {
       this.getData();

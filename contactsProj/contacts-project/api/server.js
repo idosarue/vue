@@ -20,7 +20,7 @@ mongoose.connect("mongodb://localhost:27017/contactsDB");
 
 const app = express();
 // app.use(express.urlencoded({ extended: false }));
-// app.use(express.json());
+app.use(express.json());
 app.use(cors());
 
 app.use(express.static(__dirname + "/uploads"));

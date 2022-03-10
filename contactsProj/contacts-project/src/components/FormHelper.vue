@@ -33,7 +33,7 @@
 
 <script>
 import { bus } from "../main";
-import {API_URL} from '../config/constants'
+import { API_URL } from "../config/constants";
 
 export default {
   data() {
@@ -45,51 +45,56 @@ export default {
         lastName: "",
         phoneNumber: ""
       },
-      existingPhoneNumbers: [],
       contacts: [],
       errors: []
     };
   },
   computed: {
-	  phoneNumberIsValid() {
-      return /^[+]?[(]?[0-9]{3}[)]?[- .]?[0-9]{3}[- .]?[0-9]{4,6}$/im.test(this.formData.phoneNumber)
+    phoneNumberIsValid() {
+      return /^[+]?[(]?[0-9]{3}[)]?[- .]?[0-9]{3}[- .]?[0-9]{4,6}$/im.test(
+        this.formData.phoneNumber
+      );
     },
+    existingPhoneNumbers() {
+      const phoneNumbers = this.contacts.map(contact => {
+        return contact.phoneNumber;
+      });
+
+      if (this.currentContactPhoneNumber) {
+        return phoneNumbers.filter(phoneNumber => {
+          return phoneNumber != this.currentContactPhoneNumber;
+        });
+      }
+
+      return phoneNumbers;
+    }
   },
   methods: {
     async getData() {
-      const response = await this.$http.get(`${API_URL}/contacts`);
       try {
+        const response = await this.$http.get(`${API_URL}/contacts`);
         this.contacts = response.data;
       } catch (error) {
         console.error(error);
       }
     },
-    getPhoneNumbers() {
-      this.existingPhoneNumbers = this.contacts.map(
-        contact => contact.phoneNumber
-      );
-      if (this.currentContactPhoneNumber) {
-        console.log(this.currentContactPhoneNumber);
-        this.existingPhoneNumbers = this.existingPhoneNumbers.filter(
-          phoneNumber => phoneNumber != this.currentContactPhoneNumber
-        );
-      }
-      console.log(this.existingPhoneNumbers);
-    },
     getErrors() {
       const requiredMessage = "This field is required",
-            invalidNumber = "invalid phone number",
-            duplicatePhoneNumber = "Phone number exists";
+        invalidNumber = "invalid phone number",
+        duplicatePhoneNumber = "Phone number exists";
       const { firstName, lastName, phoneNumber } = this.formData;
 
       this.errors = {
         firstName: !firstName ? requiredMessage : "",
         lastName: !lastName ? requiredMessage : "",
-        phoneNumber: !phoneNumber ? requiredMessage
-                      : !this.phoneNumberIsValid ? invalidNumber
-                      : this.existingPhoneNumbers.includes(phoneNumber) ? duplicatePhoneNumber
-                      : ""
-      }
+        phoneNumber: !phoneNumber
+          ? requiredMessage
+          : !this.phoneNumberIsValid
+          ? invalidNumber
+          : this.existingPhoneNumbers.includes(phoneNumber)
+          ? duplicatePhoneNumber
+          : ""
+      };
     },
     putContact() {
       this.$http
@@ -115,22 +120,21 @@ export default {
     },
     async checkForm() {
       await this.getData();
-      this.getPhoneNumbers();
       this.getErrors();
 
       // exit function if there are any errors
-      const {firstName, lastName, phoneNumber} = this.errors
-	    if (firstName || lastName || phoneNumber) return
-	  
+      const { firstName, lastName, phoneNumber } = this.errors;
+      if (firstName || lastName || phoneNumber) return;
+
       if (this.currentContactPhoneNumber) {
         this.putContact();
       } else {
         this.postContact();
       }
-    },
+    }
   },
   created() {
-    bus.$on("clearForm", data => {
+    bus.$on("clearForm", () => {
       this.formData = {};
       this.errors = {};
       this.contactId = "";

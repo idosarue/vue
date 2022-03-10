@@ -2,7 +2,7 @@
 	<div>
 		<div v-show="showModal" class="modal">
 			<span v-on:click="closeModal" class="close-modal">&times;</span>
-			<slot name="form"></slot>
+			<FormHelper />
 		</div>
 		<div v-show="showModal" v-on:click="closeModal" class="overlay"></div>
 		<button class="add-button" v-on:click="openModal">+</button>
@@ -11,13 +11,15 @@
 
 <script>
 	import { bus } from "../main";
+	import FormHelper from "./FormHelper.vue";
 
 	export default {
-		components: {},
+		components: {
+			FormHelper
+		},
 		data() {
 			return {
 				showModal: false,
-				contacts: "",
 			};
 		},
 

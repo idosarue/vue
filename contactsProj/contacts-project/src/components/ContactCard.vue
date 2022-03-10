@@ -18,7 +18,7 @@ import {API_URL} from '../config/constants';
 export default {
   data() {
     return {
-      placeHolderImage: "static/images/default.png",
+      placeHolderImage: "http://localhost:3000/uploads/contact1.png",
 	};
   },
   props: {
